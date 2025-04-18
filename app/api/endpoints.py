@@ -2,12 +2,12 @@ import logging
 import uuid
 from typing import Annotated
 
+from auth_lib import CurrentUserUUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select
 
-from app.api.dependencies import CurrentUserUUID
 from app.core.database import get_async_session
 from app.models.post import Post
 from app.schemas.post import PostCreate, PostRead
@@ -27,7 +27,6 @@ async def create_post(
     session: AsyncSession = Depends(get_async_session),
 ):
     """Creates a new post and bind user to post"""
-    # --- Create new post ---
     logger.info(f"Creating new post with creator_id: {creator_id}")
     create_data = post_create.model_dump()
     db_post = Post(**create_data, creator_id=creator_id)
@@ -114,7 +113,7 @@ async def get_posts_by_creator(
     statement = (
         select(Post)
         .where(Post.creator_id == user_id)
-        .order_by(Post.created_at.desc()) # Usually want newest first
+        .order_by(Post.created_at.desc())
         .offset(offset)
         .limit(limit)
     )
