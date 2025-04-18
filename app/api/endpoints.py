@@ -15,12 +15,13 @@ from app.schemas.post import PostCreate, PostRead
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
+
 @router.post(
     "/posts",
     response_model=PostRead,
     summary="Create a new post",
-    description="Retrieves the post associated with the authenticated user."
-    )
+    description="Retrieves the post associated with the authenticated user.",
+)
 async def create_post(
     post_create: PostCreate,
     creator_id: CurrentUserUUID,
@@ -43,14 +44,13 @@ async def create_post(
         logger.error(f"Integrity error for post_id: {post_to_return.id}")
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Content potentially already exists or data conflict."
+            detail="Content potentially already exists or data conflict.",
         )
     except Exception as e:
         await session.rollback()
         logger.exception(f"Error saving content for post_id: {post_to_return.id} - {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Could not save content"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Could not save content"
         )
 
 
@@ -58,12 +58,9 @@ async def create_post(
     "/posts/{post_id}",
     response_model=PostRead,
     summary="Get a single post",
-    description="Retrieves the post associated with the authenticated user."
+    description="Retrieves the post associated with the authenticated user.",
 )
-async def get_one_post(
-    post_id: uuid.UUID,
-    session: AsyncSession = Depends(get_async_session)
-):
+async def get_one_post(post_id: uuid.UUID, session: AsyncSession = Depends(get_async_session)):
     """Fetches the post"""
     statement = select(Post).where(Post.id == post_id)
     result = await session.execute(statement)
@@ -81,12 +78,14 @@ router.get(
     "/posts",
     response_model=list[PostRead],
     summary="Get recent posts",
-    description="Retrieves recently published posts"
+    description="Retrieves recently published posts",
 )
+
+
 async def get_resent_posts(
     limit: Annotated[int, Query(ge=1, le=50)] = 50,
     offset: Annotated[int, Query(ge=0)] = 0,
-    session: AsyncSession = Depends(get_async_session)
+    session: AsyncSession = Depends(get_async_session),
 ):
     """Fetches the first 50 posts"""
     statement = select(Post).order_by(Post.created_at.desc()).offset(offset).limit(limit)
@@ -101,13 +100,13 @@ async def get_resent_posts(
     "/users/{user_id}/posts",
     response_model=list[PostRead],
     summary="Get posts filtered by creator",
-    description="Retrieves the posts created by a specific user."
+    description="Retrieves the posts created by a specific user.",
 )
 async def get_posts_by_creator(
     user_id: uuid.UUID,
     limit: Annotated[int, Query(ge=1, le=50)] = 20,
     offset: Annotated[int, Query(ge=0)] = 0,
-    session: AsyncSession = Depends(get_async_session)
+    session: AsyncSession = Depends(get_async_session),
 ):
     """Fetches the posts filtered by creator_id"""
     statement = (

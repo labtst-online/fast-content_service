@@ -39,15 +39,14 @@ app = FastAPI(
     title="Content Service",
     description="Handles user contents.",
     version="0.1.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 app.include_router(post_router, prefix="/content", tags=["Post"])
 
+
 @app.get("/test-db/", summary="Test Database Connection", tags=["Test"])
-async def test_db_connection(
-    session: AsyncSession = Depends(get_async_session)
-):
+async def test_db_connection(session: AsyncSession = Depends(get_async_session)):
     """
     Attempts to retrieve the first post_id from the database.
     """
@@ -76,10 +75,11 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
-       "app.main:app",
-       host="0.0.0.0",
-       port=8002, # Or load from config
-       reload=(settings.APP_ENV == "development"),
-       log_level="info"
-   )
+        "app.main:app",
+        host="0.0.0.0",
+        port=8002,  # Or load from config
+        reload=(settings.APP_ENV == "development"),
+        log_level="info",
+    )
