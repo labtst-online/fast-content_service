@@ -2,7 +2,7 @@ import logging
 import uuid
 from typing import Annotated
 
-from auth_lib import CurrentUserUUID
+from auth_lib.auth import CurrentUserUUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
