@@ -11,8 +11,6 @@ from app.models.post import Post
 from .core.config import settings
 from .core.database import async_engine, get_async_session
 
-# Configure logging
-# Basic config, customize as needed (e.g., structured logging)
 logging.basicConfig(level=logging.INFO if settings.APP_ENV == "production" else logging.DEBUG)
 logger = logging.getLogger(__name__)
 
@@ -30,7 +28,6 @@ async def lifespan(app: FastAPI):
     yield
 
     logger.info("Application shutdown...")
-    # Close the engine connections pool
     await async_engine.dispose()
     logger.info("Database engine disposed.")
 
@@ -70,7 +67,7 @@ async def test_db_connection(session: AsyncSession = Depends(get_async_session))
 @app.get("/", summary="Health Check", tags=["Health"])
 async def health_check():
     """Basic health check endpoint."""
-    return {"status": "ok", "service": "Profile Service"}
+    return {"status": "ok", "service": "Content Service"}
 
 
 if __name__ == "__main__":
@@ -79,7 +76,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "app.main:app",
         host="0.0.0.0",
-        port=8002,  # Or load from config
+        port=8002,
         reload=(settings.APP_ENV == "development"),
         log_level="info",
     )
