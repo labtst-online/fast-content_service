@@ -48,4 +48,4 @@ GitHub Actions workflow runs ruff formater check on every push and pull request 
 
 ## License
 
-The Fastboosty Profile Service is licensed under the terms of the MIT license.
+This repository is licensed under the terms of the MIT license.
