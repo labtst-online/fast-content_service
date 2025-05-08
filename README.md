@@ -7,7 +7,7 @@ The Content Service is responsible for managing user contents. It is part of the
 - **FastAPI** – Web framework
 - **PostgreSQL** – Relational database
 - **Docker** – Containerization
-- **GitHub Actions** – Continuous Integration (CI)
+- **GitHub Actions** – Continuous Integration and Continuous Delivery
 
 ## API Endpoints
 
@@ -41,10 +41,10 @@ cp .env.sample .env
 docker-compose up --build
 ```
 
+## GitHub Actions (CI, CD)
 
-## GitHub Actions(CI)
-
-GitHub Actions workflow runs ruff formater check on every push and pull request to the main and develop branches.
+* Continuous Integration workflow runs tests and ruff formater check on every push and pull request to the main and develop branches.
+* Continuous Delivery workflow build and push image to GHCR.
 
 ## License
 
