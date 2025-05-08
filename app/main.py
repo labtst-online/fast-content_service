@@ -1,10 +1,11 @@
 import logging
 from contextlib import asynccontextmanager
+from importlib.metadata import PackageNotFoundError, version
 
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from importlib.metadata import version, PackageNotFoundError
+
 from app.api.endpoints import router as post_router
 from app.models.post import Post
 
@@ -20,6 +21,7 @@ try:
     __version__ = version("fastboosty-profile_service")
 except PackageNotFoundError:
     __version__ = "0.0.0"
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
