@@ -43,11 +43,28 @@ jobs:
       - name: Install UV
         uses: astral-sh/setup-uv@v6
 
-      - name: Install project and dev dependencies (for semantic-release)
+      - name: Install project and dev dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y git
           uv sync --all-extras
 
+      - name: Show Git status and commit history for semantic-release
+        run: |
+          echo "--- Current pyproject.toml version (before semantic-release) ---"
+          grep "version = " pyproject.toml || echo "version not found in pyproject.toml"
+          echo "--- Git Tags ---"
+          git tag -l
+          echo "--- Latest tag ---"
+          LATEST_TAG_CMD="git describe --tags --abbrev=0 $(git rev-list --tags --max-count=1 2>/dev/null)"
+          LATEST_TAG=$($LATEST_TAG_CMD) || echo "No tags found or error describing tags."
+          echo "Latest tag determined as: $LATEST_TAG"
+          echo "--- Commits on main since latest tag (or all if no tags) ---"
+          if [ -n "$LATEST_TAG" ] && [ "$LATEST_TAG" != "No tags found or error describing tags." ] ; then
+            git log ${LATEST_TAG}..HEAD --oneline
+          else
+            git log --oneline
+          fi
+          
       - name: Configure Git User for semantic-release
         run: |
           git config user.name "github-actions[bot]"
@@ -70,6 +87,9 @@ jobs:
           
           echo "release_created=true" >> $GITHUB_OUTPUT # Assume success if no error
           echo "Semantic Release process finished. Latest tag is now: ${LATEST_GIT_TAG_AFTER_PUBLISH}"
+
+          echo "--- Current pyproject.toml version (after semantic-release) ---"
+          grep "version = " pyproject.toml || echo "version not found in pyproject.toml"
 
   build_and_push_image:
     name: Build and Push Docker Image to GHCR
