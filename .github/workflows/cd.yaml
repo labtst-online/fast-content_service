@@ -18,7 +18,7 @@ jobs:
         run: echo "CI workflow on main branch for commit ${{ github.event.workflow_run.head_sha }} was successful. Proceeding with CD."
 
   create_release:
-    name: Release
+    name: Create Semantic Release
     runs-on: ubuntu-latest
     needs: confirm_ci_success
     permissions:
@@ -26,6 +26,7 @@ jobs:
     outputs:
       new_version: ${{ steps.semantic_release.outputs.version }}
       new_version_tag: ${{ steps.semantic_release.outputs.version_tag }}
+      release_created: ${{ steps.semantic_release.outputs.release_created }}
 
     steps:
       - name: Checkout
@@ -55,16 +56,20 @@ jobs:
       - name: Run Semantic Release
         id: semantic_release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          uv run semantic-release publish
+          echo "Running: uv run semantic-release publish --verbose"
+        
+          uv run semantic-release publish --verbose
           
-          LATEST_GIT_TAG=$(git describe --tags --abbrev=0 `git rev-list --tags --max-count=1`)
-          VERSION_NUMBER=${LATEST_GIT_TAG#v}
+          LATEST_GIT_TAG_AFTER_PUBLISH=$(git describe --tags --abbrev=0 `git rev-list --tags --max-count=1`)
+          VERSION_NUMBER_AFTER_PUBLISH=${LATEST_GIT_TAG_AFTER_PUBLISH#v}
           
-          echo "version=${VERSION_NUMBER}" >> $GITHUB_OUTPUT
-          echo "version_tag=${LATEST_GIT_TAG}" >> $GITHUB_OUTPUT
-          echo "Created new release: ${LATEST_GIT_TAG}"
+          echo "version=${VERSION_NUMBER_AFTER_PUBLISH}" >> $GITHUB_OUTPUT
+          echo "version_tag=${LATEST_GIT_TAG_AFTER_PUBLISH}" >> $GITHUB_OUTPUT
+          
+          echo "release_created=true" >> $GITHUB_OUTPUT # Assume success if no error
+          echo "Semantic Release process finished. Latest tag is now: ${LATEST_GIT_TAG_AFTER_PUBLISH}"
 
   build_and_push_image:
     name: Build and Push Docker Image to GHCR
