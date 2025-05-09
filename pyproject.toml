@@ -14,11 +14,15 @@ dependencies = [
     "sqlmodel>=0.0.24",
     "uvicorn>=0.34.0",
     "auth-lib @ git+https://github.com/fotapol/auth-lib.git@main",
-    "python-semantic-release>=9.21.1",
 ]
+
+[project.urls]
+Homepage = "https://github.com/fotapol/content-service"
+Repository = "https://github.com/fotapol/content-service"
 
 [project.optional-dependencies]
 dev = [
+    "python-semantic-release>=9.21.1",
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.5", # For testing async code
     "ruff>=0.11.2",           # Linter/Formatter
@@ -32,8 +36,23 @@ build-backend = "setuptools.build_meta"
 line-length = 100
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "I", "UP", "PL", "T20"] # Example selection, customize as needed
+select = ["E", "W", "F", "I", "UP", "PL", "T20"]
 ignore = []
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.semantic_release]
+version_toml = [
+    "pyproject.toml:project.version"
+]
+branch = "main"
+upload_to_pypi = false
+upload_to_release = true
+version_source = "tag"
+commit_version_number = true
+changelog_file = "CHANGELOG.md"
+commit_message = "chore(release): bump version to v{version}"
+commit_parser_options = { conventional_commits_version = "0.1.0" }
+major_on_breaking = true
+hvcs = "github"
