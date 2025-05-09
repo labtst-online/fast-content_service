@@ -1,21 +1,25 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # Set work directory
 WORKDIR /app
 
+# Install system dependencies including git
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Install uv
-RUN pip install uv
+RUN pip install --no-cache-dir uv
 
 # Copy only dependency definition files first for caching
 COPY pyproject.toml ./
 
 # Install dependencies using uv
-# Use --system to install globally in the container image, common for Docker
-RUN uv pip install --system ".[dev]"
+RUN uv pip install --system --no-cache .
 
 # Copy the entrypoint script and make it executable
 COPY entrypoint.sh /entrypoint.sh
