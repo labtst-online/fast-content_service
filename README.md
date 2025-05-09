@@ -19,13 +19,13 @@ The Content Service is responsible for managing user contents. It is part of the
 
 ## Getting Started
 
-> This service depends on the `auth_service`. It's recommended to run the full system using [`fastboosty-deployment`](https://github.com/fastboosty/fastboosty-deployment).
+> This service depends on the `auth_service`. It's recommended to run the full system using [`fastboosty-deployment`](https://github.com/fotapol/fastboosty-deployment).
 
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/fastboosty/fastboosty-content.git
-cd fastboosty-content
+git clone https://github.com/fotapol/fastboosty-content_service.git
+cd fastboosty-content_service
 ```
 
 ### 2. Configure
