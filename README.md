@@ -1,6 +1,6 @@
-# FastBoosty – Content Service
+# Content Service
 
-The Content Service is responsible for managing user contents. It is part of the **FastBoosty** app.
+The Content Service is responsible for managing user contents. It is part of the FastAPI app.
 
 ## Tech Stack
 
@@ -16,16 +16,15 @@ The Content Service is responsible for managing user contents. It is part of the
 - `GET /content/posts/{post_id}` – Retrieves the post associated with the authenticated user.
 - `GET /content/users/{user_id}/posts` – Retrieves the posts created by a specific user.
 
-
 ## Getting Started
 
-> This service depends on the `auth_service`. It's recommended to run the full system using [`fastboosty-deployment`](https://github.com/fotapol/fastboosty-deployment).
+> This service depends on the `auth_service`. It's recommended to run the full system using [`fast-deployment`](https://github.com/labtst-online/fast-deployment).
 
 ### 1. Clone repository
 
 ```bash
-git clone https://github.com/fotapol/fastboosty-content_service.git
-cd fastboosty-content_service
+git clone https://github.com/labtst-online/fast-content_service.git
+cd fast-content_service
 ```
 
 ### 2. Configure
@@ -33,7 +32,7 @@ cd fastboosty-content_service
 ```bash
 cp .env.sample .env
 ```
-> Change varibles before `docker-compose up`
+> Change variables before `docker-compose up`
 
 ### 3. Run with Docker
 
