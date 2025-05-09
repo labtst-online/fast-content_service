@@ -55,5 +55,4 @@ changelog_file = "CHANGELOG.md"
 commit_message = "chore(release): bump version to v{version}"
 commit_parser_options = { conventional_commits_version = "0.1.0" }
 major_on_breaking = true
-commit_version_number = true
 hvcs = "github"
